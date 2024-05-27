@@ -27,13 +27,13 @@
 #define ACTION_PROVOKE 1
 #define ACTION_PULL 2
 
-int get_train_length() {
+int get_train_length() {//열차 길이 출력
 	int len;
 	printf("train length(%d~%d)>>", LEN_MIN, LEN_MAX);
 	scanf_s("%d", &len);
 	return len;
 }
-int get_madongseokstamina() {
+int get_madongseokstamina() {//마동석 체력 설정
 	int stm;
 	printf("madongseokstamina(%d~%d)>>", STM_MIN, STM_MAX);
 	scanf_s("%d", &stm);
@@ -42,7 +42,7 @@ int get_madongseokstamina() {
 	}
 	return stm;
 }
-int get_percentile_probability() {
+int get_percentile_probability() {//확률 설정
 	int p;
 	printf("percentile probability ‘p’(%d~%d)>>", PROB_MIN, PROB_MAX);
 	scanf_s("%d", &p);
@@ -83,50 +83,44 @@ void print_train(int n, int C, int M, int Z) {
 	printf("\n");
 }
 
-void move_citizen(int *C, int p,int *AGGRO) {
-	int r = rand() % 100;
+void move_citizen(int *C, int p,int *AGGRO) {//시민 이동
+	int r = rand() % 100+1;
 	if (r >= p) {
 		if (*C > 1) {
 			*C -= 1;
 		}
-		printf("citizen %d->%d(aggro:%d)\n", *C + 1,*C,*AGGRO);
+		printf("citizen %d->%d(aggro:%d -> %d)\n", *C + 1,*C); //시민이 이동할때
 	}
 	else {
-		printf("citizen %d (aggro:%d)\n", *C,*AGGRO);
+		printf("citizen %d (aggro:%d)\n", *C,*AGGRO);//시민이 이동 안할때
 	}
 }
-void move_zomble(int*Z,int p,int *AGGRO,int turn) {
-	int k = rand() % 100;
+void move_zomble(int*Z,int p,int turn) {
+	int k = rand() % 100+1;
 	if (k >= p) {
-		if (turn % 2 == 0) {
-			if (*AGGRO > 0) {
-				p = PROB_MAX;  // 어그로가 있을 경우 좀비는 반드시 움직인다
-			}
-			if (*Z > 1) {
-				*Z -= 1;
-			}
-			printf("zomble %d->%d(aggro:%d)\n", *Z + 1, *Z, *AGGRO);
+		if (turn % 2 == 0) {//2턴 마다 좀비 이동
 
+			*Z -= 1;
+
+			printf("zomble %d->%d\n", *Z + 1, *Z);
+		}
 			else {
-				printf("zomble %d (aggro:%d)\n", *Z, *AGGRO);
+				printf("zomble %d\n", *Z);
 			}
 		}
 	}
-}
-
 
 
 
 int main(void) {
 	srand((unsigned int)time(NULL));
-	int stm,p, n, C, M, Z,AGGRO=0;
+	int stm,p, n, C, M, Z,AGGRO,turn;
 	n = get_train_length();
 	stm = get_madongseokstamina();
 	p = get_percentile_probability();
 	C = n - 6; M = n - 2; Z = n - 3;
 	print_train(n, C, M, Z);
 	move_citizen(&C, p,&AGGRO);
-	move_zomble(&Z, p,&AGGRO);
-	print_train(n, C, M, Z);
-	return 0;
-}
+	move_zomble(&Z, p, turn);
+		return 0;
+	}
