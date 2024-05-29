@@ -30,25 +30,29 @@
 int get_train_length() {//열차 길이 출력
 	int len;
 	printf("train length(%d~%d)>>", LEN_MIN, LEN_MAX);
-	scanf_s("%d", &len);
-	if (len > LEN_MIN || len < LEN_MAX) {
-
+	while (scanf_s("%d", &len) != 1 || len < LEN_MIN || len > LEN_MAX) {//범위 밖일때
+		printf("train length(%d~%d):", LEN_MIN, LEN_MAX);
+		while (getchar() != '\n'); 
 	}
+
 	return len;
 }
 int get_madongseokstamina() {//마동석 체력 설정
 	int stm;
-	printf("madongseokstamina(%d~%d)>>", STM_MIN, STM_MAX);
-	scanf_s("%d", &stm);
-	if (stm > STM_MIN || stm < STM_MAX) {
-
-	}
-	return stm;
+	
+		printf("madongseokstamina(%d~%d)>>", STM_MIN, STM_MAX);
+		while (scanf_s("%d", &stm) != 1 || stm < STM_MIN || stm > STM_MAX) {//범위 밖일때
+			printf("madongseokstamina(%d~%d):\n", STM_MIN, STM_MAX);
+			while (getchar() != '\n'); 
+		}
 }
 int get_percentile_probability() {//확률 설정
 	int p;
 	printf("percentile probability ‘p’(%d~%d)>>", PROB_MIN, PROB_MAX);
-	scanf_s("%d", &p);
+	while (scanf_s("%d", &p) != 1 || p < PROB_MIN || p > PROB_MAX) {
+		printf("유효한 확률 값을 입력하세요(%d~%d):\n", PROB_MIN, PROB_MAX);//범위 밖일때
+		while (getchar() != '\n');
+	}
 	return p;
 }
 
@@ -123,6 +127,7 @@ int get_madongseoks() {
 }
 
 int main(void) {
+	printf("hi welcome to tne world\n");
 	srand((unsigned int)time(NULL));
 	int stm,p, n, C, M, Z,aggro=0,a,turn=0;
 	n = get_train_length();
