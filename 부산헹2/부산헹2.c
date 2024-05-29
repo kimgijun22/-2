@@ -31,6 +31,9 @@ int get_train_length() {//열차 길이 출력
 	int len;
 	printf("train length(%d~%d)>>", LEN_MIN, LEN_MAX);
 	scanf_s("%d", &len);
+	if (len > LEN_MIN || len < LEN_MAX) {
+
+	}
 	return len;
 }
 int get_madongseokstamina() {//마동석 체력 설정
@@ -83,44 +86,54 @@ void print_train(int n, int C, int M, int Z) {
 	printf("\n");
 }
 
-void move_citizen(int *C, int p,int *AGGRO) {//시민 이동
-	int r = rand() % 100+1;
-	if (r >= p) {
-		if (*C > 1) {
-			*C -= 1;
+void move_citizen(int* C, int p, int *aggro) {//시민 이동
+	int r = rand() % 100 + 1;
+	if (*aggro > AGGRO_MIN || *aggro < AGGRO_MAX) {
+		if (r >= p) {
+			if (*C > 1) {
+				*C -= 1;
+				*aggro += 1;
+			}
+			printf("citizen %d->%d(aggro:%d -> %d)\n", *C + 1, *C, *aggro,*aggro+1); //시민이 이동할때
 		}
-		printf("citizen %d->%d(aggro:%d -> %d)\n", *C + 1,*C); //시민이 이동할때
-	}
-	else {
-		printf("citizen %d (aggro:%d)\n", *C,*AGGRO);//시민이 이동 안할때
+		else {
+			printf("citizen stay %d (aggro:%d->aggro:%d)\n", *C,*aggro,*aggro-1);//시민이 이동 안할때
+		}
 	}
 }
-void move_zomble(int*Z,int p,int turn) {
+void move_zomble(int*Z,int p,int *turn) {
 	int k = rand() % 100+1;
 	if (k >= p) {
-		if (turn % 2 == 0) {//2턴 마다 좀비 이동
+		if (*turn % 2 == 0) {//2턴 마다 좀비 이동
 
 			*Z -= 1;
 
-			printf("zomble %d->%d\n", *Z + 1, *Z);
+			printf("zomble %d->%d\n", *Z + 1, *Z);//좀비가 움직일때
 		}
 			else {
-				printf("zomble %d\n", *Z);
+				printf("zomble stay %d\n", *Z);//좀비가 안움직일때
 			}
-		}
+	}(*turn)++;
 	}
 
-
+int get_madongseoks() {
+	int a;
+	printf("madongseokmove(%d:stay, %d:left)>>", MOVE_STAY, MOVE_LEFT);
+	scanf_s("%d", &a);
+}
 
 int main(void) {
 	srand((unsigned int)time(NULL));
-	int stm,p, n, C, M, Z,AGGRO,turn;
+	int stm,p, n, C, M, Z,aggro=0,a,turn=0;
 	n = get_train_length();
 	stm = get_madongseokstamina();
 	p = get_percentile_probability();
 	C = n - 6; M = n - 2; Z = n - 3;
-	print_train(n, C, M, Z);
-	move_citizen(&C, p,&AGGRO);
-	move_zomble(&Z, p, turn);
+	while (1) {
+		print_train(n, C, M, Z);
+		move_citizen(&C, p, &aggro);
+		move_zomble(&Z, p, turn);
+		a = get_madongseoks();
+	}
 		return 0;
 	}
