@@ -105,10 +105,9 @@ void move_citizen(int* C, int p, int *aggro) {//시민 이동
 		}
 	}
 }
-void move_zomble(int*Z,int p,int *turn) {
+void move_zomble(int*Z,int p) {
 	int k = rand() % 100+1;
-	if (k >= p) {
-		if (*turn % 2 == 0) {//2턴 마다 좀비 이동
+		if (k>=p) {
 
 			*Z -= 1;
 
@@ -117,13 +116,16 @@ void move_zomble(int*Z,int p,int *turn) {
 			else {
 				printf("zomble stay %d\n", *Z);//좀비가 안움직일때
 			}
-	}(*turn)++;
 	}
 
 int get_madongseoks() {
 	int a;
 	printf("madongseokmove(%d:stay, %d:left)>>", MOVE_STAY, MOVE_LEFT);
-	scanf_s("%d", &a);
+	while (scanf_s("%d", &a) != 1 || a < MOVE_STAY || a > MOVE_LEFT) {//범위 밖일때
+		printf("madongseokmove(%d:stay, %d:left)>>", MOVE_STAY, MOVE_LEFT);
+		while (getchar() != '\n');
+	}
+	return a;
 }
 
 int main(void) {
@@ -137,7 +139,7 @@ int main(void) {
 	while (1) {
 		print_train(n, C, M, Z);
 		move_citizen(&C, p, &aggro);
-		move_zomble(&Z, p, turn);
+		move_zomble(&Z, p);
 		a = get_madongseoks();
 	}
 		return 0;
